@@ -6,12 +6,11 @@ module.exports = function () {
             info:  {},
             tests: []
         },
-        testCount: 0,
 
         noColors: true,
 
-        reportTaskStart (startTime, userAgents, testCount) {
-            this.testCount = testCount;
+        reportTaskStart (startTime, userAgents/*, testCount*/) {
+            this.xrayReport.info.testPlanKey = '';
             this.xrayReport.info.summary = 'Execution of automated tests through testCafe';
             this.xrayReport.info.description = 'This execution is automatically generated using our Framework';
             this.xrayReport.info.testEnvironments = userAgents;
@@ -52,7 +51,7 @@ module.exports = function () {
             currentTest.comment = testRunInfo;
             currentTest.status = testStatus;
             currentTest.start =  this.moment(testStartDate).format('YYYY-MM-DDThh:mm:ssZ');
-            currentTest.finish = this.moment(new Date(testStartDate.getTime() + testRunInfo.durationMs)).format('YYYY-MM-DDThh:mm:ssZ');
+            currentTest.finish = this.moment(testStartDate).add('ms', testRunInfo.durationMs).format('YYYY-MM-DDThh:mm:ssZ');
             delete currentTest.comment.errs;
             this.xrayReport.tests.push(JSON.parse(JSON.stringify(currentTest)));
             currentTest = {};
